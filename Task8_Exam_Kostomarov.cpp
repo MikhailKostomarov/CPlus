@@ -1,6 +1,7 @@
 #include<iostream>
 #include <cstring>
 #define DATE 3
+#define WA 20
 using namespace std;
 
 struct Store
@@ -16,7 +17,7 @@ struct Store
 
 Store input();
 void output(Store*);
-Store searchName(Store*,int,char*);
+Store searchName(Store*, int, char*);
 int searchProdInd(Store*, int, char*);
 void deleteprod(Store*, int, int);
 void updtProdname(Store&, char*);
@@ -24,8 +25,8 @@ void updtProdmanf(Store&, char*);
 void updtProdgrp(Store&, char*);
 void updtProdarrv(Store&, int*);
 void updtProdexpr(Store&, int*);
-void updtProdprc(Store&, int );
-Store srchNm(Store*,int,char*);
+void updtProdprc(Store&, int);
+Store srchNm(Store*, int, char*);
 Store srchMnf(Store*, int, char*);
 Store srchGrp(Store*, int, char*);
 Store srchArrd(Store*, int, int*);
@@ -77,7 +78,7 @@ int main()
 		case 2:
 		{
 			int proddelete;
-			char searchprod[20];
+			char searchprod[WA];
 			cout << "Enter product name: ";
 			cin >> searchprod;
 			Store findProd = searchName(product, size, searchprod);
@@ -98,7 +99,7 @@ int main()
 		case 3:
 		{
 			int proddelete;
-			char searchprod[20];
+			char searchprod[WA];
 			cout << "Enter product name: ";
 			cin >> searchprod;
 			Store findProd = searchName(product, size, searchprod);
@@ -109,21 +110,21 @@ int main()
 			switch (searchway)
 			{
 			case 1:
-				char nm[20];
+				char nm[WA];
 				cout << "Enter name: ";
 				cin >> nm;
 				updtProdname(findProd, nm);
 				output(&findProd);
 				break;
 			case 2:
-				char mnf[20];
+				char mnf[WA];
 				cout << "Enter manufacture: ";
 				cin >> mnf;
 				updtProdmanf(findProd, mnf);
 				output(&findProd);
 				break;
 			case 3:
-				char grp[20];
+				char grp[WA];
 				cout << "Enter group: ";
 				cin >> grp;
 				updtProdgrp(findProd, grp);
@@ -161,7 +162,7 @@ int main()
 			default:
 				break;
 			}
-
+			break;
 		}
 		case 4:
 			int srchp;
@@ -170,21 +171,21 @@ int main()
 			switch (srchp)
 			{
 			case 1:
-				char nmsrch[20];
+				char nmsrch[WA];
 				cout << "Enter name: ";
 				cin >> nmsrch;
 				Store findProd = srchNm(product, size, nmsrch);
 				output(&findProd);
 				break;
 			case 2:
-				char mnfsrch[20];
+				char mnfsrch[WA];
 				cout << "Enter manufacture: ";
 				cin >> nmsrch;
 				findProd = srchMnf(product, size, mnfsrch);
 				output(&findProd);
 				break;
 			case 3:
-				char grpsrch[20];
+				char grpsrch[WA];
 				cout << "Enter group: ";
 				findProd = srchGrp(product, size, grpsrch);
 				output(&findProd);
@@ -236,7 +237,7 @@ int main()
 		cout << "\nEnter digit to continue, char to exit: ";
 		cin >> b;
 	}
-	
+
 	delete[]product;
 	product = nullptr;
 	return 0;
@@ -244,9 +245,9 @@ int main()
 
 Store input()
 {
-	char* name = new char[20];
-	char* manufacture = new char[20];
-	char* group = new char[20];
+	char* name = new char[WA];
+	char* manufacture = new char[WA];
+	char* group = new char[WA];
 	int* arrival = new int[DATE];
 	int* expiry = new int[DATE];
 	int price;
@@ -299,243 +300,243 @@ Store input()
 	return Store{ name,manufacture,group,arrival,expiry,price };
 }
 
-	void output(Store* product)
+void output(Store* product)
+{
+	cout << "Name: " << product->name << endl;
+	cout << "Manufacture: " << product->manufacture << endl;
+	cout << "Group: " << product->group << endl;
+	cout << "Arrival date: ";
+	for (int i = 0; i < DATE; i++)
 	{
-		cout << "Name: " << product->name <<endl;
-		cout << "Manufacture: " << product->manufacture<< endl;
-		cout << "Group: "<<product->group<<endl;
-		cout << "Arrival date: ";
-		for (int i = 0; i < DATE; i++)
-		{
-			cout << product->arrival[i] << " ";
-		}
-		cout << endl;
-		cout << "Expiry date: ";
-		for (int i = 0; i < DATE; i++)
-		{
-			cout << product->expiry[i] << " ";
-		}
-		cout << endl;
-		cout << "Price: " << product->price<< endl;
+		cout << product->arrival[i] << " ";
 	}
-
-	Store searchName(Store* prod, int size, char* name)
+	cout << endl;
+	cout << "Expiry date: ";
+	for (int i = 0; i < DATE; i++)
 	{
-		int match = 0;
-		for (int i = 0; i < size; i++)
+		cout << product->expiry[i] << " ";
+	}
+	cout << endl;
+	cout << "Price: " << product->price << endl;
+}
+
+Store searchName(Store* prod, int size, char* name)
+{
+	int match = 0;
+	for (int i = 0; i < size; i++)
+	{
+		if (strlen(prod[i].name) == strlen(name))
 		{
-			if (strlen(prod[i].name) == strlen(name))
+			for (int j = 0; j < (strlen(name)); j++)
 			{
-				for (int j = 0; j < (strlen(name)); j++)
-				{
-					if(prod[i].name[j]==name[j])
-						match++;
-				}
-				if (match == strlen(name))
-					return prod[i];
-				match = 0;
+				if (prod[i].name[j] == name[j])
+					match++;
 			}
-			else if((i==size-1)&&match != strlen(name))
-				cout << "\nProduct name is absent\n";
-		}
-	}
-
-	int searchProdInd(Store* prod, int size, char* name)
-	{
-		int match = 0;
-		for (int i = 0; i < size; i++)
-		{
-			if (strlen(prod[i].name) == strlen(name))
-			{
-				for (int j = 0; j < (strlen(name)); j++)
-				{
-					if (prod[i].name[j] == name[j])
-						match++;
-				}
-				if (match == strlen(name))
-					return i;
-
-			}
-		}
-	}
-
-	void deleteprod(Store* prod, int id, int n)
-	{
-		Store* delprod = new Store[n - 1];
-		for (int a = 0, b=0; a < (n-1); a++,b++)
-		{
-			if (b == (id))
-			{
-				a--;
-				continue;
-			}
-			else
-				delprod[a] = prod[b];
-		}
-		cout << endl;
-		for (int i = 0; i < (n-1); i++)
-		{
-			output(&delprod[i]);
-		}
-		cout << endl;
-	}
-
-	void updtProdname(Store& prod, char* nm)
-	{
-		prod.name = nm;
-	}
-
-	void updtProdmanf(Store& prod, char* manf)
-	{
-		prod.manufacture = manf;
-	}
-
-	void updtProdgrp(Store& prod, char* grp)
-	{
-		prod.group = grp;
-	}
-
-	void updtProdarrv(Store& prod, int* arrv)
-	{
-		prod.arrival = arrv;
-	}
-
-	void updtProdexpr(Store& prod, int* expr)
-	{
-		prod.expiry = expr;
-	}
-
-	void updtProdprc(Store& prod, int prc)
-	{
-		prod.price = prc;
-	}
-
-	Store srchNm(Store* prod, int size, char* nm)
-	{
-		int match = 0;
-		for (int i = 0; i < size; i++)
-		{
-			if (strlen(prod[i].name) == strlen(nm))
-			{
-				for (int j = 0; j < (strlen(nm)); j++)
-				{
-					if (prod[i].name[j] == nm[j])
-						match++;
-				}
-				if (match == strlen(nm))
-					return prod[i];
-				match = 0;
-			}
-			else
-				cout << "\nName is absent\n";
-		}
-	}
-	Store srchMnf(Store* prod, int size, char* mnf)
-	{
-		int match = 0;
-		for (int i = 0; i < size; i++)
-		{
-			if (strlen(prod[i].manufacture) == strlen(mnf))
-			{
-				for (int j = 0; j < (strlen(mnf)); j++)
-				{
-					if (prod[i].manufacture[j] == mnf[j])
-						match++;
-				}
-				if (match == strlen(mnf))
-					return prod[i];
-				match = 0;
-			}
-			else
-				cout << "\nManufacture is absent\n";
-		}
-	}
-	Store srchGrp(Store* prod, int size, char* grp)
-	{
-		int match = 0;
-		for (int i = 0; i < size; i++)
-		{
-			if (strlen(prod[i].group) == strlen(grp))
-			{
-				for (int j = 0; j < (strlen(grp)); j++)
-				{
-					if (prod[i].group[j] == grp[j])
-						match++;
-				}
-				if (match == strlen(grp))
-					return prod[i];
-				match = 0;
-			}
-			else
-				cout << "\nGroupe is absent\n";
-		}
-	}
-	Store srchArrd(Store* prod, int size, int* arrd)
-	{
-		int match = 0;
-		for (int i = 0; i < size; i++)
-		{
-			if (prod[i].arrival == arrd)
-			{
+			if (match == strlen(name))
 				return prod[i];
-			}
+			match = 0;
 		}
+		else if ((i == size - 1) && match != strlen(name))
+			cout << "\nProduct name is absent\n";
 	}
-	Store srchExprd(Store* prod, int size, int* axprd)
-	{
-		int match = 0;
-		for (int i = 0; i < size; i++)
-		{
-			if (prod[i].expiry == axprd)
-			{
-				return prod[i];
-			}
-		}
-	}
-	Store srchPrc(Store* prod, int size, int prc)
-	{
-		int match = 0;
-		for (int i = 0; i < size; i++)
-		{
-			if (prod[i].price == prc)
-			{
-				return prod[i];
-			}
-		}
-	}
+}
 
-	void bubbleSort(Store* prod, int n)
+int searchProdInd(Store* prod, int size, char* name)
+{
+	int match = 0;
+	for (int i = 0; i < size; i++)
 	{
-		int a;
-		cout << "Select sorting type:\n1 - by price\n2 - by group\n";
-		cin >> a;
-		switch (a)
+		if (strlen(prod[i].name) == strlen(name))
 		{
-		case 1:
-			for (int i = 0; i < n - 1; i++)
+			for (int j = 0; j < (strlen(name)); j++)
 			{
-				for (int j = 0; j < n - i - 1; j++)
-				{
-					if (prod[j].price>prod[j + 1].price)
-					{
-						swap(prod[j], prod[j + 1]);
-					}
-				}
+				if (prod[i].name[j] == name[j])
+					match++;
 			}
-			break;
-		case 2:
-			for (int k = 0; k < n - 1; k++)
-			{
-				for (int l = 0; l < n - k - 1; l++)
-				{
-					if (strcmp(prod[l].group, prod[l + 1].group) == 1)
-					{
-						swap(prod[l], prod[l + 1]);
-					}
-				}
-			}
-			break;
-		default:
-			break;
+			if (match == strlen(name))
+				return i;
+
 		}
 	}
+}
+
+void deleteprod(Store* prod, int id, int n)
+{
+	Store* delprod = new Store[n - 1];
+	for (int a = 0, b = 0; a < (n - 1); a++, b++)
+	{
+		if (b == (id))
+		{
+			a--;
+			continue;
+		}
+		else
+			delprod[a] = prod[b];
+	}
+	cout << endl;
+	for (int i = 0; i < (n - 1); i++)
+	{
+		output(&delprod[i]);
+	}
+	cout << endl;
+}
+
+void updtProdname(Store& prod, char* nm)
+{
+	prod.name = nm;
+}
+
+void updtProdmanf(Store& prod, char* manf)
+{
+	prod.manufacture = manf;
+}
+
+void updtProdgrp(Store& prod, char* grp)
+{
+	prod.group = grp;
+}
+
+void updtProdarrv(Store& prod, int* arrv)
+{
+	prod.arrival = arrv;
+}
+
+void updtProdexpr(Store& prod, int* expr)
+{
+	prod.expiry = expr;
+}
+
+void updtProdprc(Store& prod, int prc)
+{
+	prod.price = prc;
+}
+
+Store srchNm(Store* prod, int size, char* nm)
+{
+	int match = 0;
+	for (int i = 0; i < size; i++)
+	{
+		if (strlen(prod[i].name) == strlen(nm))
+		{
+			for (int j = 0; j < (strlen(nm)); j++)
+			{
+				if (prod[i].name[j] == nm[j])
+					match++;
+			}
+			if (match == strlen(nm))
+				return prod[i];
+			match = 0;
+		}
+		else
+			cout << "\nName is absent\n";
+	}
+}
+Store srchMnf(Store* prod, int size, char* mnf)
+{
+	int match = 0;
+	for (int i = 0; i < size; i++)
+	{
+		if (strlen(prod[i].manufacture) == strlen(mnf))
+		{
+			for (int j = 0; j < (strlen(mnf)); j++)
+			{
+				if (prod[i].manufacture[j] == mnf[j])
+					match++;
+			}
+			if (match == strlen(mnf))
+				return prod[i];
+			match = 0;
+		}
+		else
+			cout << "\nManufacture is absent\n";
+	}
+}
+Store srchGrp(Store* prod, int size, char* grp)
+{
+	int match = 0;
+	for (int i = 0; i < size; i++)
+	{
+		if (strlen(prod[i].group) == strlen(grp))
+		{
+			for (int j = 0; j < (strlen(grp)); j++)
+			{
+				if (prod[i].group[j] == grp[j])
+					match++;
+			}
+			if (match == strlen(grp))
+				return prod[i];
+			match = 0;
+		}
+		else
+			cout << "\nGroupe is absent\n";
+	}
+}
+Store srchArrd(Store* prod, int size, int* arrd)
+{
+	int match = 0;
+	for (int i = 0; i < size; i++)
+	{
+		if (prod[i].arrival == arrd)
+		{
+			return prod[i];
+		}
+	}
+}
+Store srchExprd(Store* prod, int size, int* axprd)
+{
+	int match = 0;
+	for (int i = 0; i < size; i++)
+	{
+		if (prod[i].expiry == axprd)
+		{
+			return prod[i];
+		}
+	}
+}
+Store srchPrc(Store* prod, int size, int prc)
+{
+	int match = 0;
+	for (int i = 0; i < size; i++)
+	{
+		if (prod[i].price == prc)
+		{
+			return prod[i];
+		}
+	}
+}
+
+void bubbleSort(Store* prod, int n)
+{
+	int a;
+	cout << "Select sorting type:\n1 - by price\n2 - by group\n";
+	cin >> a;
+	switch (a)
+	{
+	case 1:
+		for (int i = 0; i < n - 1; i++)
+		{
+			for (int j = 0; j < n - i - 1; j++)
+			{
+				if (prod[j].price > prod[j + 1].price)
+				{
+					swap(prod[j], prod[j + 1]);
+				}
+			}
+		}
+		break;
+	case 2:
+		for (int k = 0; k < n - 1; k++)
+		{
+			for (int l = 0; l < n - k - 1; l++)
+			{
+				if (strcmp(prod[l].group, prod[l + 1].group) == 1)
+				{
+					swap(prod[l], prod[l + 1]);
+				}
+			}
+		}
+		break;
+	default:
+		break;
+	}
+}
