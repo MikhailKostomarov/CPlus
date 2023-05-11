@@ -3,7 +3,11 @@
 #define DATE 3
 #define WA 20
 using namespace std;
-
+char* NM = nullptr;
+char* MN = nullptr;
+char* GR = nullptr;
+int* AR = nullptr;
+int* EX = nullptr;
 struct Store
 {
 	char* name;						//имя товара
@@ -19,6 +23,8 @@ Store input();
 void output(Store*);
 Store searchName(Store*, int, char*);
 int searchProdInd(Store*, int, char*);
+int searchProdIndmnf(Store*, int, char*);
+int searchProdIndgr(Store*, int, char*);
 void deleteprod(Store*, int, int);
 void updtProdname(Store&, char*);
 void updtProdmanf(Store&, char*);
@@ -240,40 +246,55 @@ int main()
 
 	delete[]product;
 	product = nullptr;
+	delete[]NM;						
+	delete[]MN;				
+	delete[]GR;					
+	delete[]AR;					
+	delete[]EX;
+	NM= nullptr;
+	MN= nullptr;
+	GR= nullptr;
+	AR= nullptr;
+	EX= nullptr;
 	return 0;
 }
 
 Store input()
 {
-	char* name = new char[WA];
-	char* manufacture = new char[WA];
-	char* group = new char[WA];
-	int* arrival = new int[DATE];
-	int* expiry = new int[DATE];
+	char* name1 = new char[WA];
+	char* manufacture1 = new char[WA];
+	char* group1 = new char[WA];
+	int* arrival1 = new int[DATE];
+	int* expiry1 = new int[DATE];
 	int price;
+	NM = name1;
+	MN = manufacture1;
+	GR = group1;
+	AR = arrival1;
+	EX = expiry1;
 	cout << "Enter product name: ";
-	cin >> name;
+	cin >> name1;
 	cout << "Enter manufacture: ";
-	cin >> manufacture;
+	cin >> manufacture1;
 	cout << "Enter group: ";
-	cin >> group;
+	cin >> group1;
 	cout << "Enter arrival date:\n";
 	for (int i = 0; i < DATE; i++)
 	{
 		if (i == 0)
 		{
 			cout << "Enter day: ";
-			cin >> arrival[i];
+			cin >> arrival1[i];
 		}
 		else if (i == 1)
 		{
 			cout << "Enter month: ";
-			cin >> arrival[i];
+			cin >> arrival1[i];
 		}
 		else if (i == 2)
 		{
 			cout << "Enter year: ";
-			cin >> arrival[i];
+			cin >> arrival1[i];
 		}
 	}
 	cout << "Enter expiry date:\n";
@@ -282,22 +303,22 @@ Store input()
 		if (i == 0)
 		{
 			cout << "Enter day: ";
-			cin >> expiry[i];
+			cin >> expiry1[i];
 		}
 		else if (i == 1)
 		{
 			cout << "Enter month: ";
-			cin >> expiry[i];
+			cin >> expiry1[i];
 		}
 		else if (i == 2)
 		{
 			cout << "Enter year: ";
-			cin >> expiry[i];
+			cin >> expiry1[i];
 		}
 	}
 	cout << "Enter price: ";
 	cin >> price;
-	return Store{ name,manufacture,group,arrival,expiry,price };
+	return Store{ name1,manufacture1,group1,arrival1,expiry1,price };
 }
 
 void output(Store* product)
@@ -354,6 +375,44 @@ int searchProdInd(Store* prod, int size, char* name)
 					match++;
 			}
 			if (match == strlen(name))
+				return i;
+
+		}
+	}
+}
+
+int searchProdIndmnf(Store* prod, int size, char* mn)
+{
+	int match = 0;
+	for (int i = 0; i < size; i++)
+	{
+		if (strlen(prod[i].manufacture) == strlen(mn))
+		{
+			for (int j = 0; j < (strlen(mn)); j++)
+			{
+				if (prod[i].manufacture[j] == mn[j])
+					match++;
+			}
+			if (match == strlen(mn))
+				return i;
+
+		}
+	}
+}
+
+int searchProdIndgr(Store* prod, int size, char* gr)
+{
+	int match = 0;
+	for (int i = 0; i < size; i++)
+	{
+		if (strlen(prod[i].group) == strlen(gr))
+		{
+			for (int j = 0; j < (strlen(gr)); j++)
+			{
+				if (prod[i].group[j] == gr[j])
+					match++;
+			}
+			if (match == strlen(gr))
 				return i;
 
 		}
