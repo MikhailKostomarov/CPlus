@@ -3,6 +3,7 @@
 #define DATE 3
 #define WA 20
 using namespace std; 
+
 char* NM = nullptr;
 char* MN = nullptr;
 char* GR = nullptr;
