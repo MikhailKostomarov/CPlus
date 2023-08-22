@@ -392,6 +392,41 @@ public:
 
 	}
 
+	void addcredit()
+	{
+		bool stt = true;
+		int ch;
+		cout << "Enter card number to take credit" << endl;
+		cin >> ch;
+		for (vector<Card*>::iterator it = veccard.begin(); it != veccard.end(); ++it)
+		{
+			if ((*it)->getnumber() == ch)
+			{
+				stt = false;
+				float sum;
+				cout << "Enter summ" << endl;
+				cin >> sum;
+				while (sum < 0)
+				{
+					cout << "Summ should be greater 0" << endl;
+					cin >> sum;
+				}
+				Ccard* crds = dynamic_cast<Ccard*>(*it);
+				if (crds)
+				{
+					crds->setcredit(sum);
+				}
+				
+			}
+				
+		}
+		if (stt == true)
+		{
+			cout << "This card does not exist!" << endl;
+		}
+		
+	}
+
 	string spendtype(int n)
 	{
 		if (n == 1)
@@ -917,6 +952,40 @@ public:
 
 	}
 
+	void addcreditwallet()
+	{
+		bool stt = true;
+		int ch;
+		cout << "Enter wallet number to take credit" << endl;
+		cin >> ch;
+		for (vector<Wallet*>::iterator it = vecwal.begin(); it != vecwal.end(); ++it)
+		{
+			if ((*it)->getnumber() == ch)
+			{
+				stt = false;
+				float sum;
+				cout << "Enter summ" << endl;
+				cin >> sum;
+				while (sum < 0)
+				{
+					cout << "Summ should be greater 0" << endl;
+					cin >> sum;
+				}
+				Cwallet* crds = dynamic_cast<Cwallet*>(*it);
+				if (crds)
+				{
+					crds->setcredit(sum);
+				}
+
+			}
+
+		}
+		if (stt == true)
+		{
+			cout << "This wallet does not exist!" << endl;
+		}
+
+	}
 
 	void spendingwallet()
 	{
@@ -1024,7 +1093,9 @@ int main()
 	exmpl.displ();
 	exmpl.spending();
 	exmpl.displ();
-	exmpl.monthspend();
+	exmpl.addcredit();
+	exmpl.displ();
+	//exmpl.monthspend();
 	//exmpl.top3monthly();
 	//exmpl.top3weekly();
 	//exmpl.weekspend();
